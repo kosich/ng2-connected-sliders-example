@@ -1,16 +1,78 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Subject } from 'rxjs/Rx';
 
 @Component({
-  selector: 'app-item',
-  templateUrl: './item.component.html',
-  styleUrls: ['./item.component.scss']
+    selector: 'app-item',
+    templateUrl: './item.component.html',
+    styleUrls: ['./item.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ItemComponent),
+            multi: true
+        }
+    ]
 })
-export class ItemComponent implements OnInit {
-  private value = 0;
+export class ItemComponent implements OnInit, ControlValueAccessor {
+    private form: FormGroup;
+    private sliderValue: number = 0;
+    private slide$ = new Subject<number>();
 
-  constructor() { }
+    constructor(fb: FormBuilder) {
+        this.form = fb.group(
+            { input: []
+            , slider: []
+            , disabled: []
+            }
+        );
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+        const { slide$, form } = this;
+        
+        form
+        .valueChanges
+        .map(x=>x.value)
+        .distinctUntilChanged()
+        .withLatestFrom(slide$, (value,slider)=>({value, slider}))
+        .distinctUntilKeyChanged('slider')
+        .pluck('value')
+        .subscribe((value:number)=>{
+            this.sliderValue = value;
+        })
 
+        this.slide$.subscribe(value=>{
+            this.form.patchValue({
+                input: value
+            })
+        });
+    }
+
+    onSliderSlide(value) {
+        this.slide$.next(value);
+    }
+
+    public writeValue(value: number) {
+        this.form.setValue({
+            input: value,
+            slider: value,
+            disabled: false
+        }, {
+                emitEvent: false,
+            });
+    }
+
+    subscribe(fn: Function) {
+        this.form.valueChanges
+            .subscribe(({ input }) => fn(input));
+    }
+
+    public registerOnChange(fn: Function) {
+        this.subscribe(fn);
+    }
+
+    public registerOnTouched(fn: Function) {
+        this.subscribe(fn);
+    }
 }

@@ -3,7 +3,8 @@
 
     <div formArrayName="items">
         <div *ngFor="let item of form.controls.items.controls; let i=index" [formGroupName]="i" >
-            <input formControlName="value" />
+            <!-- <input formControlName="value" />  -->
+            <app-item formControlName="value"></app-item>
         </div>
     </div>
 

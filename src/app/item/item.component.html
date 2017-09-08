@@ -1,4 +1,22 @@
-empty
-<!-- <section>
-  <nouislider [connect]="true" [min]="0" [max]="15" [(ngModel)]="value"></nouislider>
-</section> -->
+<section>
+    <form [formGroup]="form" novalidate>
+        <input
+            [formControl]="form.controls.input"
+        />
+        <input
+            type="checkbox" 
+            [formControl]="form.controls.disabled"
+        />
+    </form>
+
+    <nouislider
+        [connect]="true"
+        [min]="0"
+        [max]="100"
+        [step]="1"
+        [config]="{ start: 0 }"
+        [ngModel]="sliderValue"
+        (slide)="onSliderSlide($event)"
+    ></nouislider>
+
+</section>
