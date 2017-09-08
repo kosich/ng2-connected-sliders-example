@@ -1,0 +1,10 @@
+<form [formGroup]="form" novalidate>
+
+
+    <div formArrayName="items">
+        <div *ngFor="let item of form.controls.items.controls; let i=index" [formGroupName]="i" >
+            <input formControlName="value" />
+        </div>
+    </div>
+
+</form>
