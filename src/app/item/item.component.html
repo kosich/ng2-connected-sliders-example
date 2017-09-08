@@ -1,23 +1,24 @@
 <section>
-    <form [formGroup]="form" novalidate>
-        <input
-            type="number"
-            [formControl]="form.controls.input"
-        />
-        <input
-            type="checkbox" 
-            [formControl]="form.controls.disabled"
-        />
-    </form>
+    <input
+        type="number"
+        (ngModelChange)="onInputChange($event)"
+        [ngModel]="value"
+        [disabled]="disabled"
+    />
 
     <nouislider
-        [connect]="true"
+        [connect]="[true,false]"
         [min]="0"
         [max]="100"
         [step]="1"
-        [config]="{ start: 0 }"
+        [config]="sliderConfig"
         [ngModel]="sliderValue"
-        (slide)="onSliderSlide($event)"
+        (slide)="onSliderChange($event)"
+        [disabled]="disabled"
     ></nouislider>
 
+    <input
+        type="checkbox"
+        [(ngModel)]="disabled"
+    />
 </section>
