@@ -1,4 +1,4 @@
-<section>
+<section class="item">
     <input
         type="number"
         (ngModelChange)="onInputChange($event)"
@@ -17,8 +17,11 @@
         [disabled]="disabled"
     ></nouislider>
 
+    <label>
     <input
         type="checkbox"
         [(ngModel)]="disabled"
     />
+    Disabled
+    </label>
 </section>

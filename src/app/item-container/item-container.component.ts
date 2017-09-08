@@ -34,15 +34,18 @@ export class ItemContainerComponent implements OnInit {
         form.setControl('items', items);
 
         const itemsChange = items.controls.map((ctrl,index)=>ctrl.valueChanges.map(value=>({ value, index })));
+
         Observable
         .merge(...itemsChange)
         .subscribe(({ value, index })=>{
             const { value : v } = value;
             const leftOver = 100 - v;
             const newValue = leftOver / 4;
-            items.controls.filter((_,i)=>i!==index).map(c=>c.patchValue({
-                value: newValue
-            }, { emitEvent: false }))
+            items.controls
+            .filter((_,i)=>i!==index)
+            .map(c=>
+                c.patchValue({ value: newValue }, { emitEvent: false })
+            )
         });
     }
 }

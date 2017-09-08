@@ -1,9 +1,15 @@
 <form [formGroup]="form" novalidate>
 
-    <div formArrayName="items">
-        <div *ngFor="let item of form.controls.items.controls; let i=index" [formGroupName]="i" >
+    <div formArrayName="items" class="row">
+
+        <div
+            *ngFor="let item of form.controls.items.controls; let i=index"
+            [formGroupName]="i" 
+            class="col-xs"
+        >
             <app-item formControlName="value"></app-item>
         </div>
+
     </div>
 
 </form>
