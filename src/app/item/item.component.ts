@@ -21,31 +21,25 @@ export class ItemComponent implements OnInit, ControlValueAccessor {
 
     constructor(fb: FormBuilder) {
         this.form = fb.group(
-            { input: []
-            , slider: []
-            , disabled: []
+            {
+                input: []
+                , disabled: []
             }
         );
     }
 
     ngOnInit() {
         const { slide$, form } = this;
-        
-        form
-        .valueChanges
-        .map(x=>x.value)
-        .distinctUntilChanged()
-        .withLatestFrom(slide$, (value,slider)=>({value, slider}))
-        .distinctUntilKeyChanged('slider')
-        .pluck('value')
-        .subscribe((value:number)=>{
-            this.sliderValue = value;
-        })
 
-        this.slide$.subscribe(value=>{
-            this.form.patchValue({
-                input: value
+        form
+            .valueChanges
+            .map(x => x.input)
+            .subscribe((value: number) => {
+                this.sliderValue = value;
             })
+
+        this.slide$.subscribe(value => {
+            this.form.patchValue({ input: value })
         });
     }
 
@@ -56,11 +50,12 @@ export class ItemComponent implements OnInit, ControlValueAccessor {
     public writeValue(value: number) {
         this.form.setValue({
             input: value,
-            slider: value,
             disabled: false
         }, {
-                emitEvent: false,
-            });
+            emitEvent: false,
+        });
+
+        this.sliderValue = value;
     }
 
     subscribe(fn: Function) {

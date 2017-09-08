@@ -39,9 +39,10 @@ export class ItemContainerComponent implements OnInit {
         .subscribe(({ value, index })=>{
             const { value : v } = value;
             const leftOver = 100 - v;
-            const values = leftOver / 4;
-            const patch = Array(4).fill(values).map(value=>({ value }))
-            items.patchValue(patch, { emitEvent: false });
+            const newValue = leftOver / 4;
+            items.controls.filter((_,i)=>i!==index).map(c=>c.patchValue({
+                value: newValue
+            }, { emitEvent: false }))
         });
     }
 }
